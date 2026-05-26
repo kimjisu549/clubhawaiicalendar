@@ -6,361 +6,568 @@
 <title>클럽하와이 — 월간 콘텐츠 캘린더</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Pretendard:wght@400;500;700;900&family=Archivo+Black&family=Archivo:wght@400;700;900&family=Cormorant+Garamond:ital,wght@1,500;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* 클럽하와이 시그니처 컬러 — 트로피컬 선셋 코랄 */
-    --bg: #FF5A36;
-    --bg-deep: #E0381A;
-    --cell: #FFFFFF;
-    --ink: #161616;
-    --soft: #6B6B6B;
-    --outside: rgba(255,255,255,0.45);
+    /* 베이스 */
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --surface-2: #F1F1ED;
+    --surface-3: #D8D8D3;
+    --ink: #0E0E0C;
+    --soft: #6B6B66;
+    --mute: #A8A8A2;
+    --line: #E8E8E3;
+    --line-strong: #D0D0CA;
 
-    /* 카테고리 컬러 */
-    --c-han: #2ECC71;
-    --c-pro: #8E44AD;
-    --c-event: #F39C12;
-    --c-back: #3498DB;
-    --c-grade: #F1C40F;
-    --c-yoomini: #E91E63;
-    --c-notice: #5DADE2;
-    --c-off: #2C3E50;
+    /* 단 하나의 액센트 — 라임 */
+    --accent: #CDFF3E;
+    --accent-deep: #B6E81F;
+
+    /* 카테고리 (파스텔 배경 + 진한 보더) */
+    --c-han-bg: #E6F5D7;       --c-han: #5E9B36;
+    --c-pro-bg: #ECE3F4;       --c-pro: #7B57B0;
+    --c-event-bg: #FFE9CB;     --c-event: #C97A14;
+    --c-back-bg: #DDEEFB;      --c-back: #2E7CC0;
+    --c-grade-bg: #FBF1C8;     --c-grade: #A8810D;
+    --c-yoomini-bg: #FAD5E0;   --c-yoomini: #B72C5A;
+    --c-notice-bg: #DEF0F5;    --c-notice: #4E97AE;
+    --c-off: #0E0E0C;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
 
   body {
     background: var(--bg);
-    font-family: 'Pretendard', -apple-system, sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--ink);
-    min-height: 100vh;
-    padding: 40px 48px 56px;
-    position: relative;
-    overflow-x: auto;
+    font-feature-settings: 'ss03', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.06) 100%);
-    pointer-events: none;
-    mix-blend-mode: multiply;
-  }
-
-  .frame {
-    max-width: 1400px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  /* ───────── 헤더 ───────── */
-  .header {
+  /* ═══════════ 레이아웃 ═══════════ */
+  .layout {
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    margin-bottom: 18px;
-    gap: 24px;
-    padding-bottom: 16px;
-  }
-  .title-block .kicker {
-    font-family: 'Archivo', sans-serif;
-    font-weight: 900;
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    color: rgba(0,0,0,0.55);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .title-block h1 {
-    font-family: 'Black Han Sans', sans-serif;
-    font-size: clamp(72px, 11vw, 160px);
-    line-height: 0.86;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-  }
-  .title-block .sub-en {
-    display: block;
-    font-family: 'Archivo Black', sans-serif;
-    font-size: clamp(54px, 8vw, 116px);
-    line-height: 0.9;
-    margin-top: 2px;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-  .right-block { text-align: right; padding-bottom: 12px; }
-  .right-block .serif {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-weight: 700;
-    font-size: clamp(36px, 5vw, 64px);
-    line-height: 0.95;
-    color: var(--ink);
-    white-space: pre-line;
-  }
-  .right-block .tag {
-    margin-top: 10px;
-    font-family: 'Pretendard', sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    color: rgba(0,0,0,0.7);
-    letter-spacing: -0.01em;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
   }
 
-  /* ───────── 월 이동 바 ───────── */
-  .nav-bar {
+  /* ═══════════ 사이드바 ═══════════ */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .brand-mark {
+    width: 36px; height: 36px;
+    background: var(--ink);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    color: var(--accent);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: -0.04em;
+  }
+  .brand-text .name {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .brand-text .role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    color: var(--mute);
+    margin-top: 2px;
+  }
+
+  .nav-section { margin-bottom: 28px; }
+  .nav-section h6 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--mute);
+    margin-bottom: 10px;
+    padding: 0 10px;
+  }
+  .nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--soft);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .nav-item:hover { background: var(--surface-2); color: var(--ink); }
+  .nav-item.active {
+    background: var(--ink);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .nav-item .icon {
+    width: 16px; height: 16px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .nav-item .dot {
+    width: 9px; height: 9px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-bottom { margin-top: auto; padding-top: 16px; }
+  .info-card {
+    background: var(--surface-2);
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .info-card::after {
+    content: '';
+    position: absolute;
+    top: -10px; right: -10px;
+    width: 50px; height: 50px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .info-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--mute);
+    text-transform: uppercase;
+    position: relative; z-index: 1;
+  }
+  .info-card .copy {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-top: 6px;
+    position: relative; z-index: 1;
+  }
+  .info-card .sub {
+    font-size: 11px;
+    color: var(--soft);
+    margin-top: 4px;
+    position: relative; z-index: 1;
+  }
+
+  /* ═══════════ 메인 ═══════════ */
+  main { padding: 28px 36px 48px; min-width: 0; }
+
+  .top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
-    padding: 8px 0;
-    border-top: 2px solid var(--ink);
-    border-bottom: 2px solid var(--ink);
+    margin-bottom: 28px;
   }
-  .nav-btn {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    padding: 8px 16px;
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: opacity .15s;
+  .crumb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--mute);
+    text-transform: uppercase;
   }
-  .nav-btn:hover { opacity: 0.78; }
-  .nav-btn:disabled {
-    background: transparent;
-    color: rgba(0,0,0,0.25);
-    cursor: not-allowed;
+  .crumb b { color: var(--ink); font-weight: 700; }
+  .crumb .sep { margin: 0 8px; color: var(--line-strong); }
+
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .avatar-stack { display: flex; }
+  .avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 2px solid var(--surface);
+    margin-left: -8px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    display: grid; place-items: center;
+    color: var(--soft);
   }
-  .nav-current {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 15px;
-    letter-spacing: 0.1em;
+  .avatar:first-child { margin-left: 0; }
+  .avatar.lime { background: var(--accent); color: var(--ink); }
+
+  /* Hero / 페이지 헤더 */
+  .page-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .page-head .title-area { min-width: 0; }
+  .month-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .month-ko {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.03em;
     color: var(--ink);
   }
+  .month-en {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--surface-3);
+  }
+  .serif-copy {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-top: 14px;
+    white-space: pre-line;
+    max-width: 540px;
+  }
+  .tag-line {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--soft);
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
 
-  /* ───────── 요일 헤더 ───────── */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 4px;
+  }
+  .today-btn {
+    padding: 8px 14px;
+    background: var(--accent);
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .today-btn:hover { background: var(--accent-deep); }
+  .nav-icon-btn {
+    width: 34px; height: 34px;
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: grid; place-items: center;
+    font-size: 16px;
+    transition: background .15s;
+  }
+  .nav-icon-btn:hover:not(:disabled) { background: var(--surface-2); }
+  .nav-icon-btn:disabled { color: var(--mute); cursor: not-allowed; }
+  .nav-current {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    padding: 0 10px;
+    min-width: 86px;
+    text-align: center;
+  }
+
+  .state-banner {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: center;
+    color: var(--soft);
+    font-weight: 500;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .state-banner.error {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--accent);
+  }
+
+  /* ═══════════ 캘린더 ═══════════ */
+  .calendar-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    overflow: hidden;
+  }
   .dow {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .dow > div {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 18px;
-    letter-spacing: 0.05em;
-    padding: 8px 14px;
-    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    padding: 8px 12px;
+    color: var(--mute);
   }
-  .dow > div.sun { color: #FFFFFF; }
-  .dow > div.sat { color: rgba(0,0,0,0.55); }
+  .dow > div.sun { color: var(--ink); }
 
-  /* ───────── 캘린더 그리드 ───────── */
   .grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
   }
+
   .cell {
-    background: var(--cell);
-    min-height: 150px;
-    padding: 12px 13px 13px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    min-height: 140px;
+    padding: 10px;
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    font-family: 'Pretendard', sans-serif;
+    gap: 5px;
+    transition: border-color .15s;
   }
+  .cell:hover { border-color: var(--line-strong); }
   .cell.outside {
-    background: rgba(255,255,255,0.18);
-    min-height: 150px;
+    background: transparent;
+    border-color: transparent;
   }
-  .cell.outside .date { color: var(--outside); }
+  .cell.outside .date { color: var(--mute); opacity: 0.5; }
+  .cell.outside .month-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: var(--mute);
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  .cell .date-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
   .cell .date {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 22px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
     line-height: 1;
     color: var(--ink);
-    margin-bottom: 2px;
+    letter-spacing: -0.02em;
   }
-  .cell .date.sun-date { color: #E0381A; }
-
-  /* 오늘 강조 */
-  .cell.today { outline: 3px solid var(--ink); outline-offset: -3px; }
-  .cell.today .date::after {
-    content: 'TODAY';
+  .cell .date.sun-date::after {
+    content: '';
     display: inline-block;
-    margin-left: 8px;
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    padding: 3px 6px 4px;
-    background: var(--bg);
-    color: #fff;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--ink);
+    margin-left: 4px;
     vertical-align: middle;
+    transform: translateY(-6px);
   }
 
-  /* 카테고리 바 */
-  .bar {
-    display: inline-block;
-    padding: 3px 8px 4px;
+  .cell.today {
+    border-color: var(--ink);
+    border-width: 2px;
+    padding: 9px;
+  }
+  .today-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    background: var(--accent);
+    color: var(--ink);
+    padding: 3px 6px;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  /* 콘텐츠 아이템 */
+  .item {
+    background: var(--surface-2);
+    border-left: 3px solid var(--soft);
+    border-radius: 4px;
+    padding: 5px 7px 6px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    overflow: hidden;
+  }
+  .item:hover {
+    transform: translateX(2px);
+    box-shadow: -2px 0 0 var(--ink);
+  }
+  .item-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--soft);
+    letter-spacing: 0.04em;
+    margin-bottom: 1px;
+    display: block;
+  }
+  .item-title {
     font-family: 'Pretendard', sans-serif;
     font-weight: 700;
     font-size: 11.5px;
-    line-height: 1.1;
-    color: #FFFFFF;
-    letter-spacing: -0.01em;
-    width: fit-content;
-    max-width: 100%;
-  }
-  .bar.han { background: var(--c-han); }
-  .bar.pro { background: var(--c-pro); }
-  .bar.event { background: var(--c-event); }
-  .bar.back { background: var(--c-back); color: #FFFFFF; }
-  .bar.grade { background: var(--c-grade); color: #161616; }
-  .bar.yoomini { background: var(--c-yoomini); }
-  .bar.notice { background: var(--c-notice); }
-  .bar.off { background: var(--c-off); }
-
-  .cell .item-title {
-    font-weight: 700;
-    font-size: 12.5px;
-    line-height: 1.3;
+    line-height: 1.25;
     color: var(--ink);
     letter-spacing: -0.015em;
-    margin-top: 1px;
   }
-  .cell .item-sub {
-    font-size: 11px;
-    line-height: 1.25;
+  .item-sub {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 1.2;
     color: var(--soft);
-    letter-spacing: -0.01em;
+    margin-top: 2px;
   }
-  .cell .item + .item {
-    margin-top: 4px;
-    padding-top: 6px;
-    border-top: 1px dashed rgba(0,0,0,0.12);
-  }
-  .item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    cursor: pointer;
-    transition: transform .12s;
-  }
-  .item:hover { transform: translateX(2px); }
+  .item.han      { background: var(--c-han-bg);     border-left-color: var(--c-han); }
+  .item.pro      { background: var(--c-pro-bg);     border-left-color: var(--c-pro); }
+  .item.event    { background: var(--c-event-bg);   border-left-color: var(--c-event); }
+  .item.back     { background: var(--c-back-bg);    border-left-color: var(--c-back); }
+  .item.grade    { background: var(--c-grade-bg);   border-left-color: var(--c-grade); }
+  .item.yoomini  { background: var(--c-yoomini-bg); border-left-color: var(--c-yoomini); }
+  .item.notice   { background: var(--c-notice-bg);  border-left-color: var(--c-notice); }
 
-  /* OFF 셀 */
+  /* OFF */
   .cell.off-day {
-    background: #161616;
-    color: #FFFFFF;
+    background: var(--surface-2);
+    border-color: var(--line);
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 8px,
+      rgba(0,0,0,0.025) 8px,
+      rgba(0,0,0,0.025) 9px
+    );
   }
-  .cell.off-day .date { color: #FFFFFF; }
   .cell.off-day .off-name {
     margin-top: auto;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 1;
-    color: var(--bg);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.1;
+    color: var(--ink);
   }
   .cell.off-day .off-en {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: rgba(255,255,255,0.45);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--mute);
     margin-top: 4px;
   }
 
-  /* feature 강조 셀 */
-  .cell.feature { background: var(--ink); color: #FFFFFF; }
-  .cell.feature .date { color: #FFFFFF; }
-  .cell.feature .item-title { color: #FFFFFF; }
-  .cell.feature .item-sub { color: rgba(255,255,255,0.7); }
-  .cell.feature .bar.event { background: var(--bg); color: var(--ink); }
-  .cell.feature.today { outline-color: #fff; }
+  /* Feature — 블랙 카드 */
+  .cell.feature {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .cell.feature .date { color: var(--accent); }
+  .cell.feature .date.sun-date::after { background: var(--accent); }
+  .cell.feature .item {
+    background: rgba(255,255,255,0.08);
+    border-left-color: var(--accent);
+  }
+  .cell.feature .item:hover {
+    box-shadow: -2px 0 0 var(--accent);
+  }
+  .cell.feature .item-title { color: #fff; }
+  .cell.feature .item-sub { color: rgba(255,255,255,0.6); }
+  .cell.feature .item-time { color: rgba(255,255,255,0.5); }
+  .cell.feature.today { border-color: var(--accent); }
 
-  /* ───────── 푸터 ───────── */
-  .footer {
+  .page-foot {
     margin-top: 28px;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 20px;
-  }
-  .footer .legend {
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px 4px;
-    font-family: 'Pretendard', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: #FFFFFF;
-  }
-  .footer .legend .swatch {
-    display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 4px;
-    padding: 3px 8px 4px;
-    color: #FFFFFF;
-  }
-  .footer .legend .swatch.grade { color: #161616; }
-  .footer .handle {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
     letter-spacing: 0.12em;
-    color: var(--ink);
-    text-align: center;
+    color: var(--mute);
+    text-transform: uppercase;
   }
-  .footer .credit {
-    font-family: 'Pretendard', sans-serif;
-    font-size: 11px;
-    color: rgba(0,0,0,0.55);
-    font-weight: 500;
-    text-align: right;
-    letter-spacing: -0.01em;
-  }
+  .page-foot .handle { color: var(--ink); font-weight: 700; }
 
-  /* ───────── 로딩/에러 ───────── */
-  .state-banner {
-    padding: 18px;
-    background: rgba(0,0,0,0.08);
-    text-align: center;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 12px;
-  }
-  .state-banner.error { background: #161616; color: #fff; }
-
-  /* ───────── 모달 ───────── */
+  /* ═══════════ 모달 ═══════════ */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(14,14,12,0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     padding: 24px;
-    animation: fadeIn .18s ease;
+    animation: fadeIn .2s ease;
   }
   .modal-overlay.open { display: flex; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .modal {
-    background: #FFFFFF;
-    max-width: 600px;
+    background: var(--surface);
+    max-width: 680px;
     width: 100%;
     max-height: 88vh;
     overflow-y: auto;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    animation: slideUp .22s ease;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    animation: slideUp .26s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
@@ -369,46 +576,78 @@
 
   .modal-close {
     position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 36px;
-    height: 36px;
-    background: var(--ink);
-    color: #fff;
+    top: 18px; right: 18px;
+    width: 36px; height: 36px;
+    background: var(--surface-2);
+    color: var(--ink);
     border: none;
-    font-size: 18px;
-    cursor: pointer;
-    font-family: 'Archivo Black', sans-serif;
-    z-index: 2;
-  }
-
-  .modal-header {
-    padding: 28px 28px 18px;
-    border-bottom: 2px solid var(--ink);
-  }
-  .modal-date {
-    font-family: 'Archivo Black', sans-serif;
+    border-radius: 50%;
     font-size: 14px;
-    letter-spacing: 0.1em;
-    color: var(--soft);
-    margin-bottom: 10px;
+    cursor: pointer;
+    z-index: 2;
+    transition: background .15s;
   }
-  .modal-bar { margin-bottom: 12px; }
+  .modal-close:hover { background: var(--accent); }
+
+  .modal-header { padding: 28px 32px 22px; }
+  .modal-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--mute);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .modal-cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px 6px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    background: var(--surface-2);
+    color: var(--soft);
+  }
+  .modal-cat-pill .pill-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--soft);
+  }
+  .modal-cat-pill.han      { background: var(--c-han-bg);     color: var(--c-han); }
+  .modal-cat-pill.han .pill-dot { background: var(--c-han); }
+  .modal-cat-pill.pro      { background: var(--c-pro-bg);     color: var(--c-pro); }
+  .modal-cat-pill.pro .pill-dot { background: var(--c-pro); }
+  .modal-cat-pill.event    { background: var(--c-event-bg);   color: var(--c-event); }
+  .modal-cat-pill.event .pill-dot { background: var(--c-event); }
+  .modal-cat-pill.back     { background: var(--c-back-bg);    color: var(--c-back); }
+  .modal-cat-pill.back .pill-dot { background: var(--c-back); }
+  .modal-cat-pill.grade    { background: var(--c-grade-bg);   color: var(--c-grade); }
+  .modal-cat-pill.grade .pill-dot { background: var(--c-grade); }
+  .modal-cat-pill.yoomini  { background: var(--c-yoomini-bg); color: var(--c-yoomini); }
+  .modal-cat-pill.yoomini .pill-dot { background: var(--c-yoomini); }
+  .modal-cat-pill.notice   { background: var(--c-notice-bg);  color: var(--c-notice); }
+  .modal-cat-pill.notice .pill-dot { background: var(--c-notice); }
+
   .modal-title {
     font-family: 'Pretendard', sans-serif;
-    font-weight: 900;
-    font-size: 24px;
+    font-weight: 800;
+    font-size: 26px;
     line-height: 1.25;
     color: var(--ink);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
   .modal-subtitle {
-    margin-top: 6px;
-    font-size: 14px;
+    margin-top: 8px;
+    font-size: 15px;
     color: var(--soft);
     font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
+  /* 이미지 — 원본 비율 유지 */
   .modal-image {
     width: 100%;
     height: auto;
@@ -417,136 +656,196 @@
 
   .modal-meta {
     display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 8px 14px;
-    padding: 18px 28px;
-    border-bottom: 1px dashed rgba(0,0,0,0.12);
-    font-size: 13px;
+    grid-template-columns: 86px 1fr;
+    gap: 10px 16px;
+    padding: 20px 32px;
+    background: var(--surface-2);
+    margin: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
+  .modal-meta:empty { display: none; }
   .modal-meta dt {
-    font-family: 'Archivo Black', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--soft);
-    padding-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--mute);
+    text-transform: uppercase;
+    padding-top: 3px;
   }
-  .modal-meta dd { color: var(--ink); font-weight: 500; }
+  .modal-meta dd {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 14px;
+  }
 
   .modal-body {
-    padding: 22px 28px;
-    font-size: 14.5px;
+    padding: 24px 32px;
+    font-size: 15px;
     line-height: 1.7;
     color: var(--ink);
     white-space: pre-wrap;
+    word-break: keep-all;
   }
   .modal-body:empty { display: none; }
 
-  .modal-link-wrap { padding: 0 28px 28px; }
+  .modal-link-wrap { padding: 0 32px 28px; }
   .modal-link {
-    display: inline-block;
-    padding: 12px 22px;
-    background: var(--bg);
-    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    background: var(--ink);
+    color: var(--accent);
     text-decoration: none;
+    font-family: 'Pretendard', sans-serif;
     font-weight: 700;
     font-size: 14px;
-    transition: opacity .15s;
+    border-radius: 10px;
+    transition: background .15s, transform .15s, color .15s;
   }
-  .modal-link:hover { opacity: 0.85; }
-
-  /* 인쇄 */
-  @media print {
-    body { padding: 20px; }
-    .cell { break-inside: avoid; }
-    .nav-bar, .modal-overlay { display: none !important; }
+  .modal-link:hover {
+    background: var(--accent);
+    color: var(--ink);
+    transform: translateY(-1px);
   }
+  .modal-link .arrow { transition: transform .15s; }
+  .modal-link:hover .arrow { transform: translateX(2px); }
 
-  /* 좁은 화면 */
+  /* ═══════════ 반응형 ═══════════ */
   @media (max-width: 1100px) {
-    body { padding: 24px 16px; }
-    .cell { min-height: 110px; padding: 8px; }
-    .cell .item-title { font-size: 11px; }
-    .cell .item-sub { font-size: 10px; }
-    .bar { font-size: 10px; padding: 2px 6px 3px; }
-    .modal-meta { grid-template-columns: 70px 1fr; padding: 14px 20px; }
-    .modal-header, .modal-body, .modal-link-wrap { padding-left: 20px; padding-right: 20px; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: relative;
+      height: auto;
+      flex-direction: row;
+      align-items: center;
+      padding: 16px 20px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .brand { margin-bottom: 0; flex: 1; }
+    .nav-section { display: none; }
+    .sidebar-bottom { display: none; }
+    main { padding: 20px 16px 40px; }
+    .cell { min-height: 100px; padding: 7px; }
+    .cell.today { padding: 6px; }
+    .cell .date { font-size: 14px; }
+    .item-title { font-size: 10.5px; }
+    .item-sub { font-size: 9.5px; }
+    .dow > div { padding: 6px 8px; font-size: 10px; }
+    .month-row { gap: 10px; }
+    .page-head { grid-template-columns: 1fr; gap: 18px; }
+    .modal-header { padding: 24px 22px 18px; }
+    .modal-body, .modal-link-wrap, .modal-meta { padding-left: 22px; padding-right: 22px; }
+  }
+  @media (max-width: 640px) {
+    .calendar-card { padding: 10px; border-radius: 12px; }
+    .dow > div { padding: 5px 4px; font-size: 9px; letter-spacing: 0.08em; }
+    .grid, .dow { gap: 3px; }
+    .cell { min-height: 76px; padding: 5px; border-radius: 6px; }
+    .cell .date { font-size: 12px; }
+    .item { padding: 3px 5px 4px; }
+    .item-title { font-size: 9.5px; line-height: 1.2; }
+    .item-sub, .item-time, .today-pill { display: none; }
+  }
+  @media print {
+    .sidebar, .month-nav, .top-actions, .modal-overlay { display: none !important; }
+    .layout { grid-template-columns: 1fr; }
+    .cell { break-inside: avoid; }
   }
 </style>
 </head>
 <body>
 
-<div class="frame">
+<div class="layout">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="title-block">
-      <div class="kicker">CLUB HAWAII · MONTHLY CONTENT MAP</div>
-      <h1>클럽하와이</h1>
-      <span class="sub-en" id="hd-en">—</span>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">CH</div>
+      <div class="brand-text">
+        <div class="name">클럽하와이</div>
+        <div class="role">MONTHLY CONTENT MAP</div>
+      </div>
     </div>
-    <div class="right-block">
-      <div class="serif" id="hd-serif">—</div>
-      <div class="tag" id="hd-tag">—</div>
+
+    <div class="nav-section">
+      <h6>CATEGORIES</h6>
+      <ul class="nav-list">
+        <li class="nav-item"><span class="dot" style="background:var(--c-han)"></span>한입에쏙</li>
+        <li class="nav-item"><span class="dot" style="background:var(--c-pro)"></span>전문성의 격</li>
+        <li class="nav-item"><span class="dot" style="background:var(--c-event)"></span>이벤트</li>
+        <li class="nav-item"><span class="dot" style="background:var(--c-back)"></span>다시,발견</li>
+        <li class="nav-item"><span class="dot" style="background:var(--c-grade)"></span>우리 학년 집중</li>
+        <li class="nav-item"><span class="dot" style="background:var(--c-yoomini)"></span>유미니</li>
+        <li class="nav-item"><span class="dot" style="background:var(--c-notice)"></span>공지</li>
+      </ul>
     </div>
-  </div>
 
-  <!-- 월 이동 -->
-  <div class="nav-bar">
-    <button class="nav-btn" id="prev-btn">‹ 이전 달</button>
-    <div class="nav-current" id="nav-current">—</div>
-    <button class="nav-btn" id="next-btn">다음 달 ›</button>
-  </div>
+  </aside>
 
-  <!-- 상태 배너 (로딩/에러) -->
-  <div class="state-banner" id="banner">데이터를 불러오는 중…</div>
+  <!-- MAIN -->
+  <main>
 
-  <!-- DOW -->
-  <div class="dow">
-    <div class="sun">SUN</div>
-    <div>MON</div>
-    <div>TUE</div>
-    <div>WED</div>
-    <div>THU</div>
-    <div>FRI</div>
-    <div class="sat">SAT</div>
-  </div>
+    <section class="page-head">
+      <div class="title-area">
+        <div class="month-row">
+          <h1 class="month-ko" id="month-ko">—</h1>
+          <span class="month-en" id="month-en">—</span>
+        </div>
+        <div class="serif-copy" id="serif-copy">—</div>
+        <div class="tag-line" id="tag-line">—</div>
+      </div>
+      <div class="month-nav">
+        <button class="today-btn" id="today-btn">오늘</button>
+        <button class="nav-icon-btn" id="prev-btn" aria-label="이전 달">‹</button>
+        <span class="nav-current" id="nav-current">—</span>
+        <button class="nav-icon-btn" id="next-btn" aria-label="다음 달">›</button>
+      </div>
+    </section>
 
-  <!-- GRID (동적 렌더링) -->
-  <div class="grid" id="grid"></div>
+    <div class="state-banner" id="banner">데이터를 불러오는 중…</div>
 
-  <!-- FOOTER -->
-  <div class="footer">
-    <div class="legend">
-      <span class="swatch" style="background:var(--c-han)">한입에쏙</span>
-      <span class="swatch" style="background:var(--c-pro)">전문성의 격</span>
-      <span class="swatch" style="background:var(--c-event)">이벤트</span>
-      <span class="swatch" style="background:var(--c-back)">다시,발견</span>
-      <span class="swatch grade" style="background:var(--c-grade)">우리 학년 집중</span>
-      <span class="swatch" style="background:var(--c-notice)">공지</span>
-    </div>
-    <div class="handle">@CLUB·HAWAII</div>
-    <div class="credit">CLUB HAWAII · planned by 박현숙</div>
-  </div>
+    <section class="calendar-card">
+      <div class="dow">
+        <div class="sun">SUN</div>
+        <div>MON</div>
+        <div>TUE</div>
+        <div>WED</div>
+        <div>THU</div>
+        <div>FRI</div>
+        <div>SAT</div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
 
+  </main>
 </div>
 
-<!-- ───────── 모달 ───────── -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" role="dialog" aria-modal="true">
     <button class="modal-close" id="modal-close" aria-label="닫기">✕</button>
     <div class="modal-header">
       <div class="modal-date" id="m-date">—</div>
-      <span class="bar modal-bar" id="m-bar">—</span>
+      <span class="modal-cat-pill" id="m-pill">
+        <span class="pill-dot"></span>
+        <span id="m-pill-label">—</span>
+      </span>
       <div class="modal-title" id="m-title">—</div>
       <div class="modal-subtitle" id="m-subtitle"></div>
     </div>
-    
+    <img class="modal-image" id="m-image" alt="" style="display:none;">
     <dl class="modal-meta" id="m-meta"></dl>
     <div class="modal-body" id="m-body"></div>
     <div class="modal-link-wrap" id="m-linkwrap" style="display:none;">
-      <a class="modal-link" id="m-link" href="#" target="_blank" rel="noopener">자세히 보기 →</a>
+      <a class="modal-link" id="m-link" href="#" target="_blank" rel="noopener">
+        <span>자세히 보기</span>
+        <span class="arrow">→</span>
+      </a>
     </div>
-    <img class="modal-image" id="m-image" alt="" style="display:none;">
   </div>
 </div>
 
@@ -555,9 +854,8 @@
  *  설정 — 여기 URL만 바꾸면 끝
  *  Apps Script [배포 → 웹 앱]에서 발급된 URL 붙여넣기
  * ═══════════════════════════════════════════════════ */
-const SHEET_API_URL = 'https://script.google.com/macros/s/AKfycby3f67OMNtcDBZAP2U-FYeT_TtXzR9lnGaKUEZ3UpZsNdBDstJuWkQjpZPW71_OqzV3cQ/exec';
+const SHEET_API_URL = 'https://script.google.com/macros/s/여기에_본인_웹앱_URL_붙여넣기/exec';
 
-/* ─────────────── 상수 ─────────────── */
 const MONTHS_EN = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
 const CATEGORY_LABELS = {
   han: '한입에쏙',
@@ -570,15 +868,13 @@ const CATEGORY_LABELS = {
   off: 'OFF'
 };
 
-/* ─────────────── 상태 ─────────────── */
 const today = new Date();
 const todayY = today.getFullYear();
-const todayM = today.getMonth(); // 0~11
+const todayM = today.getMonth();
 let viewY = todayY;
 let viewM = todayM;
-let DATA = null; // { contents, holidays, month_meta }
+let DATA = null;
 
-/* ─────────────── 유틸 ─────────────── */
 function ymd(y, m, d) {
   return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
@@ -594,12 +890,21 @@ function escapeHTML(s) {
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-/* ─────────────── 데이터 로드 ─────────────── */
+/** 구글 드라이브 뷰어 URL이면 thumbnail 직링크로 변환 */
+function normalizeImageUrl(url) {
+  if (!url) return '';
+  const m = String(url).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) {
+    return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1200`;
+  }
+  return url;
+}
+
 async function loadData() {
   const banner = document.getElementById('banner');
   try {
     if (!SHEET_API_URL || SHEET_API_URL.includes('여기에_본인')) {
-      throw new Error('SHEET_API_URL이 아직 설정되지 않았습니다. index.html 상단 SHEET_API_URL 변수에 Apps Script 웹앱 URL을 넣어주세요.');
+      throw new Error('SHEET_API_URL이 아직 설정되지 않았습니다.');
     }
     const res = await fetch(SHEET_API_URL);
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -614,28 +919,27 @@ async function loadData() {
   }
 }
 
-/* ─────────────── 렌더링 ─────────────── */
 function render() {
   if (!DATA) return;
 
-  // 헤더 업데이트
   const monthKey = `${viewY}-${String(viewM+1).padStart(2,'0')}`;
-  document.getElementById('hd-en').textContent = `${MONTHS_EN[viewM]} ${viewY}`;
+  document.getElementById('month-ko').textContent = `${viewY}년 ${viewM+1}월`;
+  document.getElementById('month-en').textContent = MONTHS_EN[viewM];
   const meta = (DATA.month_meta || []).find(r => r.month === monthKey);
-  document.getElementById('hd-serif').textContent = meta ? (meta.serif_copy || '') : '';
-  document.getElementById('hd-tag').textContent   = meta ? (meta.tag_line || '') : '';
-  document.getElementById('nav-current').textContent = `${viewY}년 ${viewM+1}월`;
+  document.getElementById('serif-copy').textContent = meta ? (meta.serif_copy || '') : '';
+  document.getElementById('tag-line').textContent   = meta ? (meta.tag_line || '') : '';
+  document.getElementById('nav-current').textContent = `${MONTHS_EN[viewM].slice(0,3)} ${viewY}`;
 
-  // 월 이동 버튼 가용 범위: 이번 달 ~ 다음 달
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
+  const todayBtn = document.getElementById('today-btn');
   prevBtn.disabled = (viewY === todayY && viewM === todayM);
   const nextLimitDate = new Date(todayY, todayM+1, 1);
   const viewNextDate  = new Date(viewY, viewM+1, 1);
   nextBtn.disabled = (viewNextDate > nextLimitDate);
+  todayBtn.style.display = (viewY === todayY && viewM === todayM) ? 'none' : 'inline-block';
 
-  // 콘텐츠/휴일 맵핑
-  const dateMap = {};   // 'YYYY-MM-DD' → [contents...]
+  const dateMap = {};
   (DATA.contents || []).forEach(r => {
     if (!r.date) return;
     if (!r.date.startsWith(monthKey)) return;
@@ -646,22 +950,19 @@ function render() {
     if (r.date && r.date.startsWith(monthKey)) holidayMap[r.date] = r;
   });
 
-  // 그리드 빌드
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
-  const firstDow = new Date(viewY, viewM, 1).getDay(); // 0=Sun
+  const firstDow = new Date(viewY, viewM, 1).getDay();
   const dim = daysInMonth(viewY, viewM);
   const totalCells = Math.ceil((firstDow + dim) / 7) * 7;
 
-  // 이전 달 outside
   const prevDim = daysInMonth(viewY, viewM-1);
   for (let i = 0; i < firstDow; i++) {
     const d = prevDim - firstDow + 1 + i;
-    grid.appendChild(buildOutsideCell(d, i === 0));
+    grid.appendChild(buildOutsideCell(d, i === 0, false));
   }
 
-  // 이번 달
   const todayStr = ymd(todayY, todayM, today.getDate());
   for (let d = 1; d <= dim; d++) {
     const dateStr = ymd(viewY, viewM, d);
@@ -670,13 +971,12 @@ function render() {
     const isSun = (dow === 0);
 
     if (holidayMap[dateStr]) {
-      grid.appendChild(buildOffCell(d, holidayMap[dateStr], isToday));
+      grid.appendChild(buildOffCell(d, holidayMap[dateStr], isToday, isSun));
     } else {
       grid.appendChild(buildContentCell(d, dateStr, dateMap[dateStr] || [], isSun, isToday));
     }
   }
 
-  // 다음 달 outside
   const used = firstDow + dim;
   const tailCount = totalCells - used;
   for (let i = 0; i < tailCount; i++) {
@@ -687,16 +987,23 @@ function render() {
 function buildOutsideCell(d, withLabel, isNextMonth) {
   const cell = document.createElement('div');
   cell.className = 'cell outside';
-  cell.innerHTML = `<div class="date">${d}</div>` +
-    (withLabel ? `<div class="item-sub">— ${isNextMonth ? MONTHS_EN[(viewM+1)%12] : MONTHS_EN[(viewM+11)%12]} —</div>` : '');
+  const monthLabel = isNextMonth ? MONTHS_EN[(viewM+1)%12] : MONTHS_EN[(viewM+11)%12];
+  cell.innerHTML = `
+    <div class="date-row"><div class="date">${d}</div></div>
+    ${withLabel ? `<div class="month-label">${monthLabel.slice(0,3)}</div>` : ''}
+  `;
   return cell;
 }
 
-function buildOffCell(d, holiday, isToday) {
+function buildOffCell(d, holiday, isToday, isSun) {
   const cell = document.createElement('div');
   cell.className = 'cell off-day' + (isToday ? ' today' : '');
+  const dateClass = isSun ? 'date sun-date' : 'date';
   cell.innerHTML = `
-    <div class="date">${d}</div>
+    <div class="date-row">
+      <div class="${dateClass}">${d}</div>
+      ${isToday ? '<span class="today-pill">TODAY</span>' : ''}
+    </div>
     <div class="off-name">${escapeHTML(holiday.name_ko)}</div>
     <div class="off-en">OFF · ${escapeHTML(holiday.name_en || '')}</div>
   `;
@@ -709,14 +1016,18 @@ function buildContentCell(d, dateStr, items, isSun, isToday) {
   cell.className = 'cell' + (hasFeature ? ' feature' : '') + (isToday ? ' today' : '');
 
   const dateClass = isSun ? 'date sun-date' : 'date';
-  let html = `<div class="${dateClass}">${d}</div>`;
+  let html = `
+    <div class="date-row">
+      <div class="${dateClass}">${d}</div>
+      ${isToday ? '<span class="today-pill">TODAY</span>' : ''}
+    </div>
+  `;
 
   items.forEach((it, idx) => {
     const cat = it.category || '';
-    const label = CATEGORY_LABELS[cat] || cat;
     html += `
-      <div class="item" data-date="${dateStr}" data-idx="${idx}">
-        <span class="bar ${escapeHTML(cat)}">${escapeHTML(label)}</span>
+      <div class="item ${escapeHTML(cat)}" data-idx="${idx}">
+        ${it.time ? `<span class="item-time">${escapeHTML(it.time)}</span>` : ''}
         <div class="item-title">${escapeHTML(it.title || '')}</div>
         ${it.subtitle ? `<div class="item-sub">${escapeHTML(it.subtitle)}</div>` : ''}
       </div>
@@ -724,19 +1035,15 @@ function buildContentCell(d, dateStr, items, isSun, isToday) {
   });
 
   cell.innerHTML = html;
-
-  // 각 item에 클릭 핸들러
   cell.querySelectorAll('.item').forEach(el => {
     el.addEventListener('click', () => {
       const idx = parseInt(el.dataset.idx, 10);
       openModal(items[idx], dateStr);
     });
   });
-
   return cell;
 }
 
-/* ─────────────── 모달 ─────────────── */
 function openModal(item, dateStr) {
   const cat = item.category || '';
   const label = CATEGORY_LABELS[cat] || cat;
@@ -745,24 +1052,24 @@ function openModal(item, dateStr) {
 
   document.getElementById('m-date').textContent = `${y}.${String(m+1).padStart(2,'0')}.${String(d).padStart(2,'0')} · ${dowLabel}`;
 
-  const bar = document.getElementById('m-bar');
-  bar.className = 'bar modal-bar ' + cat;
-  bar.textContent = label;
+  const pill = document.getElementById('m-pill');
+  pill.className = 'modal-cat-pill ' + cat;
+  document.getElementById('m-pill-label').textContent = label;
 
   document.getElementById('m-title').textContent = item.title || '';
   document.getElementById('m-subtitle').textContent = item.subtitle || '';
 
-  // 이미지
   const img = document.getElementById('m-image');
-  if (item.image_url) {
-    img.src = item.image_url;
+  const rawUrl = (item.image_url || '').trim();
+  if (rawUrl) {
+    img.src = normalizeImageUrl(rawUrl);
     img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; img.onerror = null; };
   } else {
     img.style.display = 'none';
     img.src = '';
   }
 
-  // 메타 (담당자/시간)
   const meta = document.getElementById('m-meta');
   meta.innerHTML = '';
   let hasMeta = false;
@@ -776,10 +1083,8 @@ function openModal(item, dateStr) {
   }
   meta.style.display = hasMeta ? 'grid' : 'none';
 
-  // 본문
   document.getElementById('m-body').textContent = item.detail_body || '';
 
-  // 링크
   const linkWrap = document.getElementById('m-linkwrap');
   const link = document.getElementById('m-link');
   if (item.link_url) {
@@ -802,7 +1107,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
-/* ─────────────── 월 이동 ─────────────── */
 document.getElementById('prev-btn').addEventListener('click', () => {
   if (viewY === todayY && viewM === todayM) return;
   viewM -= 1;
@@ -817,8 +1121,12 @@ document.getElementById('next-btn').addEventListener('click', () => {
   if (viewM > 11) { viewM = 0; viewY += 1; }
   render();
 });
+document.getElementById('today-btn').addEventListener('click', () => {
+  viewY = todayY;
+  viewM = todayM;
+  render();
+});
 
-/* ─────────────── 시작 ─────────────── */
 loadData();
 </script>
 </body>
