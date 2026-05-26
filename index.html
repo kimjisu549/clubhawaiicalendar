@@ -849,6 +849,13 @@
       order: 3;
     }
   }
+
+  /* ═══════════ 카테고리 필터 (Add-on) ═══════════ */
+  .nav-item[data-category] { cursor: pointer; user-select: none; }
+  .item.cat-dimmed {
+    opacity: 0.18;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
@@ -875,13 +882,13 @@
     <div class="nav-section">
       <h6>CATEGORIES</h6>
       <ul class="nav-list">
-        <li class="nav-item"><span class="dot" style="background:var(--c-han)"></span>한입에쏙</li>
-        <li class="nav-item"><span class="dot" style="background:var(--c-pro)"></span>전문성의 격</li>
-        <li class="nav-item"><span class="dot" style="background:var(--c-event)"></span>이벤트</li>
-        <li class="nav-item"><span class="dot" style="background:var(--c-back)"></span>다시,발견</li>
-        <li class="nav-item"><span class="dot" style="background:var(--c-grade)"></span>우리 학년 집중</li>
-        <li class="nav-item"><span class="dot" style="background:var(--c-yoomini)"></span>유미니</li>
-        <li class="nav-item"><span class="dot" style="background:var(--c-notice)"></span>공지</li>
+        <li class="nav-item" data-category="han"><span class="dot" style="background:var(--c-han)"></span>한입에쏙</li>
+        <li class="nav-item" data-category="pro"><span class="dot" style="background:var(--c-pro)"></span>전문성의 격</li>
+        <li class="nav-item" data-category="event"><span class="dot" style="background:var(--c-event)"></span>이벤트</li>
+        <li class="nav-item" data-category="back"><span class="dot" style="background:var(--c-back)"></span>다시,발견</li>
+        <li class="nav-item" data-category="grade"><span class="dot" style="background:var(--c-grade)"></span>우리 학년 집중</li>
+        <li class="nav-item" data-category="yoomini"><span class="dot" style="background:var(--c-yoomini)"></span>유미니</li>
+        <li class="nav-item" data-category="notice"><span class="dot" style="background:var(--c-notice)"></span>공지</li>
       </ul>
     </div>
 
@@ -1306,6 +1313,47 @@ document.getElementById('today-btn').addEventListener('click', () => {
 
   // 그리드가 다시 그려지면 (월 이동, 데이터 로드) 필터 재적용
   new MutationObserver(applySearchFilter).observe(gridEl, { childList: true });
+})();
+
+/* ═══════════ 카테고리 필터 (Add-on) ═══════════
+ * 사이드바 CATEGORIES 항목 클릭 시 해당 카테고리만 또렷하게 표시.
+ * 같은 항목 재클릭 또는 다른 항목 클릭으로 토글/전환.
+ * 검색 필터와 독립적으로 동작 (둘 다 활성화되면 AND).
+ */
+(function setupCategoryFilter() {
+  const items = document.querySelectorAll('.nav-item[data-category]');
+  const gridEl = document.getElementById('grid');
+  if (!items.length || !gridEl) return;
+  let activeCategory = null;
+
+  function applyCategoryFilter() {
+    document.querySelectorAll('.cell .item').forEach(el => {
+      if (!activeCategory) {
+        el.classList.remove('cat-dimmed');
+        return;
+      }
+      const matches = el.classList.contains(activeCategory);
+      el.classList.toggle('cat-dimmed', !matches);
+    });
+  }
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      const cat = item.dataset.category;
+      if (activeCategory === cat) {
+        activeCategory = null;
+        item.classList.remove('active');
+      } else {
+        items.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        activeCategory = cat;
+      }
+      applyCategoryFilter();
+    });
+  });
+
+  // 월 이동 후 그리드 재렌더 시 필터 유지
+  new MutationObserver(applyCategoryFilter).observe(gridEl, { childList: true });
 })();
 
 loadData();
