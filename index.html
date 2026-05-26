@@ -45,6 +45,10 @@
     --accent: #CDFF3E;
     --accent-deep: #B6E81F;
 
+    /* 주말 색상 */
+    --sun: #D93838;
+    --sat: #2E7CC0;
+    
     /* 카테고리 (파스텔 배경 + 진한 보더) */
     --c-han-bg: #E6F5D7;       --c-han: #5E9B36;
     --c-pro-bg: #ECE3F4;       --c-pro: #7B57B0;
@@ -374,7 +378,8 @@
     padding: 8px 12px;
     color: var(--mute);
   }
-  .dow > div.sun { color: var(--ink); }
+  .dow > div.sun { color: var(--sun); }
+  .dow > div.sat { color: var(--sat); }
 
   .grid {
     display: grid;
@@ -423,16 +428,8 @@
     color: var(--ink);
     letter-spacing: -0.02em;
   }
-  .cell .date.sun-date::after {
-    content: '';
-    display: inline-block;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: var(--ink);
-    margin-left: 4px;
-    vertical-align: middle;
-    transform: translateY(-6px);
-  }
+  .cell .date.sun-date { color: var(--sun); }
+  .cell .date.sat-date { color: var(--sat); }
 
   .cell.today {
     border-color: var(--ink);
