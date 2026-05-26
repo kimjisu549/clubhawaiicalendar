@@ -755,6 +755,100 @@
     .layout { grid-template-columns: 1fr; }
     .cell { break-inside: avoid; }
   }
+
+  /* ═══════════ 검색 (Add-on) ═══════════ */
+  .search-section {
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 32px 11px 34px;
+    background: var(--surface-2);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    outline: none;
+    transition: background .15s, border-color .15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .search-input::placeholder { color: var(--mute); font-weight: 500; }
+  .search-input::-webkit-search-cancel-button { display: none; }
+  .search-input:focus {
+    background: var(--surface);
+    border-color: var(--ink);
+  }
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 11px;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: var(--mute);
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+  }
+  .search-input:focus + .search-icon,
+  .search-section.has-value .search-icon { color: var(--ink); }
+  .search-clear {
+    position: absolute;
+    top: 50%;
+    right: 7px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    color: var(--mute);
+    font-size: 11px;
+    display: none;
+    border-radius: 50%;
+    transition: background .15s, color .15s;
+  }
+  .search-clear:hover { background: var(--ink); color: var(--accent); }
+  .search-section.has-value .search-clear { display: grid; place-items: center; }
+  .search-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--mute);
+    margin-top: 8px;
+    padding: 0 4px;
+    display: none;
+    line-height: 1.4;
+  }
+  .search-section.has-value .search-meta { display: block; }
+  .search-meta .count { color: var(--ink); font-weight: 700; }
+  .search-meta .other { color: var(--soft); }
+
+  /* 검색 매칭 상태 */
+  .item.search-dimmed {
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .item.search-matched {
+    box-shadow: 0 0 0 2px var(--ink);
+  }
+  .cell.feature .item.search-matched {
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  @media (max-width: 1100px) {
+    .search-section {
+      width: 100%;
+      margin-bottom: 0;
+      order: 3;
+    }
+  }
 </style>
 </head>
 <body>
@@ -769,6 +863,13 @@
         <div class="name">클럽하와이</div>
         <div class="role">MONTHLY CONTENT MAP</div>
       </div>
+    </div>
+
+    <div class="search-section" id="search-section">
+      <input type="search" class="search-input" id="search-input" placeholder="콘텐츠 검색" autocomplete="off">
+      <span class="search-icon">⚲</span>
+      <button class="search-clear" id="search-clear" aria-label="검색어 지우기">✕</button>
+      <div class="search-meta" id="search-meta"></div>
     </div>
 
     <div class="nav-section">
@@ -1126,6 +1227,86 @@ document.getElementById('today-btn').addEventListener('click', () => {
   viewM = todayM;
   render();
 });
+
+/* ═══════════ 검색 (Add-on) ═══════════
+ * 기존 render/buildCell 로직은 일절 수정하지 않음.
+ * 1) 입력 시 현재 보이는 .item을 DOM 텍스트로 매칭 → 비매칭 dimmed
+ * 2) DATA(전체 월) 기준 카운트도 함께 표시
+ * 3) MutationObserver로 그리드 재렌더 시 자동 재적용 (월 이동 후 유지)
+ */
+(function setupSearch() {
+  const inputEl = document.getElementById('search-input');
+  const clearBtn = document.getElementById('search-clear');
+  const sectionEl = document.getElementById('search-section');
+  const metaEl = document.getElementById('search-meta');
+  const gridEl = document.getElementById('grid');
+  if (!inputEl || !gridEl) return;
+
+  function applySearchFilter() {
+    const q = (inputEl.value || '').trim().toLowerCase();
+
+    if (!q) {
+      sectionEl.classList.remove('has-value');
+      document.querySelectorAll('.item.search-dimmed, .item.search-matched')
+        .forEach(el => el.classList.remove('search-dimmed', 'search-matched'));
+      return;
+    }
+
+    sectionEl.classList.add('has-value');
+
+    // 화면에 보이는 아이템 필터링
+    let visibleMatch = 0;
+    document.querySelectorAll('.cell .item').forEach(el => {
+      const title = (el.querySelector('.item-title')?.textContent || '').toLowerCase();
+      const sub   = (el.querySelector('.item-sub')?.textContent || '').toLowerCase();
+      const time  = (el.querySelector('.item-time')?.textContent || '').toLowerCase();
+      const hit = title.includes(q) || sub.includes(q) || time.includes(q);
+      el.classList.toggle('search-matched', hit);
+      el.classList.toggle('search-dimmed', !hit);
+      if (hit) visibleMatch++;
+    });
+
+    // 전체 데이터 기준 카운트 (다른 달 포함, detail_body/speaker 까지 검색)
+    let totalMatch = 0;
+    if (typeof DATA !== 'undefined' && DATA && Array.isArray(DATA.contents)) {
+      DATA.contents.forEach(it => {
+        const t = (it.title || '').toLowerCase();
+        const s = (it.subtitle || '').toLowerCase();
+        const b = (it.detail_body || '').toLowerCase();
+        const sp = (it.speaker || '').toLowerCase();
+        const tm = (it.time || '').toLowerCase();
+        if (t.includes(q) || s.includes(q) || b.includes(q) || sp.includes(q) || tm.includes(q)) {
+          totalMatch++;
+        }
+      });
+    }
+
+    let html = `이번 달 <span class="count">${visibleMatch}</span>건`;
+    if (totalMatch !== visibleMatch) {
+      html += ` <span class="other">· 전체 ${totalMatch}건</span>`;
+    }
+    metaEl.innerHTML = html;
+  }
+
+  inputEl.addEventListener('input', applySearchFilter);
+
+  clearBtn.addEventListener('click', () => {
+    inputEl.value = '';
+    applySearchFilter();
+    inputEl.focus();
+  });
+
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && inputEl.value) {
+      e.stopPropagation();
+      inputEl.value = '';
+      applySearchFilter();
+    }
+  });
+
+  // 그리드가 다시 그려지면 (월 이동, 데이터 로드) 필터 재적용
+  new MutationObserver(applySearchFilter).observe(gridEl, { childList: true });
+})();
 
 loadData();
 </script>
