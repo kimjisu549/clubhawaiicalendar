@@ -878,32 +878,28 @@
     pointer-events: none;
   }
 
-  /* ═══════════ 셀 우측 상단 배지 (Add-on) ═══════════ */
-  .cell-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #FFB84D;
-    color: #161616;
-    font-family: 'Pretendard', sans-serif;
-    font-weight: 700;
-    font-size: 10px;
-    letter-spacing: -0.02em;
-    padding: 3px 8px 4px;
-    border-radius: 999px;
-    line-height: 1;
-    z-index: 2;
-    white-space: nowrap;
-  }
-  .cell.today .cell-badge {
-    top: 7px;
-    right: 7px;
-  }
-  /* feature 셀에서는 라임으로 보이도록 */
-  .cell.feature .cell-badge {
-    background: var(--accent);
-    color: var(--ink);
-  }
+ /* ═══════════ 셀 우측 상단 배지 (Add-on) ═══════════ */
+.cell-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #FFB84D;          /* 일반 셀에선 주황 */
+  color: #161616;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: -0.02em;
+  padding: 3px 8px 4px;
+  border-radius: 999px;          /* 알약 모양 */
+  line-height: 1;
+  z-index: 2;
+  white-space: nowrap;
+}
+.cell.today .cell-badge { top: 7px; right: 7px; }
+.cell.feature .cell-badge {     /* feature(검은) 셀에선 라임 */
+  background: var(--accent);
+  color: var(--ink);
+}
 </style>
 </head>
 <body>
