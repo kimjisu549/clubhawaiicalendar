@@ -877,6 +877,33 @@
     opacity: 0.18;
     pointer-events: none;
   }
+
+  /* ═══════════ 셀 우측 상단 배지 (Add-on) ═══════════ */
+  .cell-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #FFB84D;
+    color: #161616;
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: -0.02em;
+    padding: 3px 8px 4px;
+    border-radius: 999px;
+    line-height: 1;
+    z-index: 2;
+    white-space: nowrap;
+  }
+  .cell.today .cell-badge {
+    top: 7px;
+    right: 7px;
+  }
+  /* feature 셀에서는 라임으로 보이도록 */
+  .cell.feature .cell-badge {
+    background: var(--accent);
+    color: var(--ink);
+  }
 </style>
 </head>
 <body>
@@ -1144,12 +1171,17 @@ function buildContentCell(d, dateStr, items, isSun, isToday) {
   const cell = document.createElement('div');
   cell.className = 'cell' + (hasFeature ? ' feature' : '') + (isToday ? ' today' : '');
 
+  // 셀 배지: 아이템 중 badge 필드가 있는 첫 번째 사용
+  const badgeItem = items.find(it => it.badge && String(it.badge).trim());
+  const badgeText = badgeItem ? String(badgeItem.badge).trim() : '';
+
   const dateClass = isSun ? 'date sun-date' : 'date';
   let html = `
     <div class="date-row">
       <div class="${dateClass}">${d}</div>
       ${isToday ? '<span class="today-pill">TODAY</span>' : ''}
     </div>
+    ${badgeText ? `<span class="cell-badge">${escapeHTML(badgeText)}</span>` : ''}
   `;
 
   items.forEach((it, idx) => {
