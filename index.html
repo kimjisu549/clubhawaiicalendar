@@ -279,18 +279,17 @@
     letter-spacing: -0.02em;
     color: var(--surface-3);
   }
-    .brand-watermark {
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 800;
-    font-size: clamp(20px, 3vw, 45px);
-    line-height: 1;
-    letter-spacing: 0.04em;
-    color: var(--surface-3);
-    opacity: 0.6;
-  margin-left: auto;
-align-self: flex-end;
-white-space: nowrap;
-user-select: none;
+      .header-logo {
+    margin-left: auto;
+    align-self: flex-end;
+    height: 50px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: opacity .2s;
+    padding-bottom: 4px;
+    flex-shrink: 0;
   }
   @media (max-width: 1100px) {
     .brand-watermark { display: none; }
